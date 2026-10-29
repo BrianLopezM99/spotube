@@ -66,6 +66,7 @@ import org.spotube.spotube.modules.saved_tracks.SavedTracksViewModel
 import org.spotube.spotube.resources.iconsax.Iconsax
 import org.spotube.spotube.resources.iconsax.Iconsax3DotsMore
 import org.spotube.spotube.resources.iconsax.IconsaxDirectboxReceive
+import org.spotube.spotube.resources.iconsax.IconsaxFullscreen
 import org.spotube.spotube.resources.iconsax.IconsaxMusic
 import org.spotube.spotube.resources.iconsax.IconsaxMusicFilter
 import org.spotube.spotube.resources.iconsax.SwapHorizontal2
@@ -84,6 +85,7 @@ import spotube.composeapp.generated.resources.player_sleep_timer
 import spotube.composeapp.generated.resources.player_track_details
 import spotube.composeapp.generated.resources.player_alternative_source_content_description
 import spotube.composeapp.generated.resources.player_download
+import spotube.composeapp.generated.resources.player_fullscreen_open_content_description
 import spotube.composeapp.generated.resources.player_lyrics
 import spotube.composeapp.generated.resources.player_more_options_content_description
 import spotube.composeapp.generated.resources.queue_title
@@ -96,6 +98,7 @@ import spotube.composeapp.generated.resources.queue_title
 // On the center it contains the playback controls and the progress bar
 // On the right it contains the queue btn, download button btn, alternative track source button
 // and three dots for options grouped together and below these buttons the volume slider will be shown
+// next to the button that opens the full screen player (AppFullscreenPlayer)
 @Composable
 fun AppLargePlayer(
     modifier: Modifier = Modifier,
@@ -104,6 +107,7 @@ fun AppLargePlayer(
     onAlternativeSource: () -> Unit = {},
     onMoreOptions: () -> Unit = {},
     onLyrics: () -> Unit = {},
+    onFullscreen: () -> Unit = {},
     audioPlayer: AudioPlayerInterface = koinInject(),
     audioPlayerQueue: AudioPlayerQueue = koinInject(),
     downloadsViewModel: DownloadsViewModel = koinViewModel(),
@@ -295,11 +299,21 @@ fun AppLargePlayer(
                                 })
                         }
                     }
-                    PlayerVolumeControl(
-                        playerUiState = playerUiState,
-                        sliderModifier = Modifier.fillMaxWidth(0.62f),
-                        audioPlayer = audioPlayer
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        PlayerVolumeControl(
+                            playerUiState = playerUiState,
+                            sliderModifier = Modifier.fillMaxWidth(0.62f),
+                            audioPlayer = audioPlayer
+                        )
+                        MillenniumIconButton(
+                            style = MillenniumIconButtonStyle.Quiet, onClick = onFullscreen
+                        ) {
+                            MillenniumIcon(
+                                Iconsax.IconsaxFullscreen,
+                                contentDescription = stringResource(Res.string.player_fullscreen_open_content_description)
+                            )
+                        }
+                    }
                 }
             }
         }
